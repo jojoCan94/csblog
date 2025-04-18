@@ -1,0 +1,12 @@
+@model BlogProject.Models.Post
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<h1>@Model.Title</h1>
+<p>@Model.CreatedAt.ToString("dd MMM yyyy")</p>
+<div>
+    @Model.Content
+</div>
+<a asp-controller="Blog" asp-action="Index">Torna alla lista</a>

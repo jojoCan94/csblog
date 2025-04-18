@@ -1,0 +1,15 @@
+@model BlogProject.Models.Post
+
+<h1>Elimina Post</h1>
+<p>Sei sicuro di voler eliminare questo post?</p>
+
+<dl>
+    <dt>@Model.Title</dt>
+    <dd>@Model.Content</dd>
+</dl>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Sì, elimina</button>
+    <a asp-action="Index" class="btn btn-secondary">Annulla</a>
+</form>
