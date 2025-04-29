@@ -2,24 +2,25 @@ using Microsoft.AspNetCore.Mvc;
 using BlogProject.Data;
 using BlogProject.Models;
 using System.Linq;
+using BlogProject.Generics;
 
 namespace BlogProject.Controllers
 {
-    public class BlogController(BlogContext context) : Controller
+    public class BlogController(IRepository<Post> taskRepo) : Controller
     {
-        private readonly BlogContext _context = context;
+        private readonly IRepository<Post> _taskRepo = taskRepo;
 
         // Elenco dei post
         public IActionResult Index()
         {
-            var posts = _context.Posts.OrderByDescending(p => p.CreatedAt).ToList();
+            var posts = _taskRepo.ListAll();
             return View(posts);
         }
 
         // Dettaglio di un post
         public IActionResult Details(int id)
         {
-            var post = _context.Posts.FirstOrDefault(p => p.Id == id);
+            var post = _taskRepo.FindById(id);
             if (post == null)
             {
                 return NotFound();
@@ -38,19 +39,17 @@ namespace BlogProject.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(Post post)
         {
-            if (ModelState.IsValid)
-            {
-                post.CreatedAt = DateTime.Now;
-                _context.Posts.Add(post);
-                _context.SaveChanges();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(post);
+            if (!ModelState.IsValid) return View(post);
+            post.CreatedAt = DateTime.Now;
+            _taskRepo.Add(post);
+            _taskRepo.Save();
+            return RedirectToAction(nameof(Index));
+
         }
 
         public IActionResult Edit(int id)
         {
-            var post = _context.Posts.Find(id);
+            var post = _taskRepo.FindById(id);
             if (post == null) return NotFound();
             return View(post);
         }
@@ -62,14 +61,14 @@ namespace BlogProject.Controllers
             if (!ModelState.IsValid)
                 return View(post);
             post.CreatedAt = DateTime.Now;
-            _context.Posts.Update(post);
-            _context.SaveChanges();
+            _taskRepo.Update(post);
+            _taskRepo.Save();
             return RedirectToAction("Details", new { id = post.Id });
         }
 
         public IActionResult Delete(int id)
         {
-            var post = _context.Posts.Find(id);
+            var post = _taskRepo.FindById(id);
             if (post == null) return NotFound();
             return View(post);
         }
@@ -78,11 +77,11 @@ namespace BlogProject.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
-            var post = _context.Posts.Find(id);
+            var post = _taskRepo.FindById(id);
             if (post == null) return NotFound();
 
-            _context.Posts.Remove(post);
-            _context.SaveChanges();
+            _taskRepo.Remove(post);
+            _taskRepo.Save();
             return RedirectToAction("Index");
         }
 

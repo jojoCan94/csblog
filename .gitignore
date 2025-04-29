@@ -1,0 +1,4 @@
+# Esclude le cartelle di output della build nella root
+
+/bin/
+/obj/
