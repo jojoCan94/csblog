@@ -1,4 +1,20 @@
-# Esclude le cartelle di output della build nella root
-
+# cartelle di build
 /bin/
 /obj/
+
+# VS Code e Visual Studio
+.vscode/
+.vs/
+*.user
+*.suo
+
+# Rider
+.idea/
+
+# altri file generati
+*.log
+*.db
+*.exe
+
+# VS Code Local History
+.history/
