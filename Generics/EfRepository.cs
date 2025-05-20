@@ -1,5 +1,6 @@
 
 using BlogProject.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace BlogProject.Generics;
 
@@ -7,34 +8,38 @@ public class EfRepository<T>(BlogContext ctx) : IRepository<T> where T : class
 {
     private readonly BlogContext _ctx = ctx;
 
-    public void Add(T entity)
+    public async Task AddAsync(T entity)
     {
-        _ctx.Set<T>().Add(entity);
+        await _ctx.Set<T>()
+                   .AddAsync(entity);
     }
 
-        public void Update(T entity)
+    public async Task<T> FindByIdAsync(int id)
+    {
+        return await _ctx.Set<T>().FindAsync(id);
+    }
+
+    public async Task<List<T>> ListAllAsync()
+    {
+        return await _ctx.Set<T>()
+                         .AsNoTracking()
+                         .ToListAsync();
+    }
+
+    public Task UpdateAsync(T entity)
     {
         _ctx.Set<T>().Update(entity);
+        return Task.CompletedTask;
     }
 
-    public T? FindById(int id)
+    public Task RemoveAsync(T entity)
     {
-        return _ctx.Find<T>(id);
+        _ctx.Set<T>().Remove(entity);
+        return Task.CompletedTask;
     }
 
-    public List<T?> ListAll()
+    public Task SaveAsync()
     {
-        return _ctx.Set<T>().ToList();
-        // [.. _ctx.Set<T>()];
-    }
-
-    public void Remove(T entity)
-    {
-        _ctx.Remove(entity);
-    }
-
-    public void Save()
-    {
-        _ctx.SaveChanges();
+        return _ctx.SaveChangesAsync();
     }
 }

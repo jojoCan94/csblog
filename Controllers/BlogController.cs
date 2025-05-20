@@ -11,13 +11,24 @@ namespace BlogProject.Controllers
         private readonly IRepository<Post> _taskRepo = taskRepo;
 
         // Elenco dei post
-        public IActionResult Index()
+        public Task<IActionResult> Index()
         {
-            var posts = _taskRepo.ListAll();
-            return View(posts);
+            var posts = _taskRepo.ListAllAsync();
+            return Task.FromResult<IActionResult>(View(posts));
         }
+        
+        //public IActionResult Index()
+        //{
+        //    var posts = _taskRepo.ListAll();
+        //    return View(posts);
+        //}
 
         // Dettaglio di un post
+        public Task<IActionResult> Details(int id)
+        {
+            
+        }
+        
         public IActionResult Details(int id)
         {
             var post = _taskRepo.FindById(id);

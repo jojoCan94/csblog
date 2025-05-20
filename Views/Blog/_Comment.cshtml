@@ -1,0 +1,7 @@
+@model BlogProject.Models.Comment
+
+<div class="comment">
+    <strong>@Model.Name</strong> 
+    <small>@Model.CreatedAt.ToString("dd MMM yyyy HH:mm")</small>
+    <p>@Model.Content</p>
+</div>
